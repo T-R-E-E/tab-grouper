@@ -8,8 +8,9 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 
   // Query for all tabs in the current window.
   chrome.tabs.query({ currentWindow: true }, function(allTabs) {
+
     // Filter the tabs to include only those with an index greater than OR equal to the active tab's index.
-    tabsToRight = allTabs.filter(tab => tab.index >= activeTabIndex);
+    tabsToRight = allTabs.filter(tab => tab.index >= activeTabIndex && !tabInGroup(tab.id));
 
     // Fetch the button element.
     const button = document.querySelector("button");
@@ -38,3 +39,27 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     });
   });
 });
+
+// Checks if a tab is already in a group
+function tabInGroup(tabIdToCheck)
+{
+  // Querys the groups in the window
+  chrome.tabGroups.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function(groups) {
+
+    // For each group
+    for (const group of groups) {
+      
+      // Checks if tab in the group or not
+      chrome.tabs.query({groupId: group.id, tabIds: [tabIdToCheck]}, function(groupTabs) {
+          if (groupTabs.length > 0) 
+          {
+            return true;
+          }
+          else
+          {
+            return false;
+          }
+      });
+    }
+  });
+}
