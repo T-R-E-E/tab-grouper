@@ -1,6 +1,4 @@
-chrome.tabs.query({},function(tabs){     
-    console.log("\n/////////////////////\n");
-    tabs.forEach(function(tab){
-      console.log(tab.url);
-    });
- });
+chrome.tabs.query({active: true, lastFocusedWindow: true}, function(tabs) {
+    let tabURL = tabs[0].url;
+    console.log(tabURL);
+});
