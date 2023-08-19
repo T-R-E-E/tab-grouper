@@ -14,17 +14,26 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     // Fetch the button element.
     const button = document.querySelector("button");
 
-
     // Add a click event listener to the button.
     button.addEventListener("click", async () => {
-      // Create an array of tab IDs from 'tabsToRight'.
+    
+      // Retrieve group name from extension
+      const groupName = document.getElementById("name").value;
+
+      // Validate group name
+      if (!groupName || groupName.trim() == '') {
+        alert("Please provide valid group name");
+        return;
+      }
+      
+      // Create an array of tab ids from tabsToRight
       const tabIds = tabsToRight.map(({ id }) => id);
 
       // Group the selected tabs into a new tab group.
       const group = await chrome.tabs.group({ tabIds });
 
       // Update the title of the created tab group to whatever the name input is
-      await chrome.tabGroups.update(group, { title: document.getElementById("name").value});
+      await chrome.tabGroups.update(group, { title: groupName});
     });
   });
 });
