@@ -9,8 +9,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
   // Query for all tabs in the current window.
   chrome.tabs.query({ currentWindow: true }, function(allTabs) {
 
-    // Filter the tabs to include only those with an index greater than OR equal to the active tab's index.
-    tabsToRight = allTabs.filter(tab => tab.index >= activeTabIndex && !tabInGroup(tab.id));
+    // Filter the tabs to include those to the right & those NOT currently in a group
+    tabsToRight = allTabs.filter(tab => (tab.index >= activeTabIndex && !tabInGroup(tab.id)));
 
     // Fetch the button element.
     const button = document.querySelector("button");
