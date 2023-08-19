@@ -1,8 +1,4 @@
-const tabs = await chrome.tabs.query({
-    url: [
-      "https://*.com/*",
-    ],
-  });
+const tabs = await chrome.tabs.query({ currentWindow: true });
 
 const template = document.getElementById("li_template");
 const elements = new Set();
