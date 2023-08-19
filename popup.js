@@ -21,6 +21,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 
     // Iterate through the 'tabsToRight' array.
     for (const tab of tabsToRight) {
+      
       // Clone the template element to create a new list item.
       const element = template.content.firstElementChild.cloneNode(true);
 
