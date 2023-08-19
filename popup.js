@@ -19,13 +19,14 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     
       // Retrieve group name from extension
       const groupName = document.getElementById("name").value;
+      const groupColor = document.getElementById("color").value.toLowerCase();
 
       // Validate group name
-      if (!groupName || groupName.trim() == '') {
-        alert("Please provide valid group name");
+      if (!groupName || groupName.trim() == '' || !groupColor || groupColor.trim() == '') {
+        alert("Please provide valid group name &/or group color");
         return;
       }
-      
+
       // Create an array of tab ids from tabsToRight
       const tabIds = tabsToRight.map(({ id }) => id);
 
@@ -33,7 +34,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
       const group = await chrome.tabs.group({ tabIds });
 
       // Update the title of the created tab group to whatever the name input is
-      await chrome.tabGroups.update(group, { title: groupName});
+      await chrome.tabGroups.update(group, { title: groupName, color: groupColor});
     });
   });
 });
