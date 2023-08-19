@@ -1,8 +1,18 @@
-const tabs = await chrome.tabs.query({ currentWindow: true });
+let tabsToRight = [];
+
+chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+  const activeTabIndex = tabs[0].index;
+
+  chrome.tabs.query({ currentWindow: true }, function(allTabs) {
+    tabsToRight = allTabs.filter(tab => tab.index > activeTabIndex);
+    console.log(tabsToRight);
+  });
+});
+
 
 const template = document.getElementById("li_template");
 const elements = new Set();
-for (const tab of tabs) {
+for (const tab of tabsToRight) {
     const element = template.content.firstElementChild.cloneNode(true);
 
     const title = tab.title.split("-")[0].trim();
