@@ -41,7 +41,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 });
 
 // Checks if a tab is already in a group
-function tabInGroup(tabIdToCheck)
+function tabInGroup(tabIdToCheck, callback)
 {
   // Querys the groups in the window
   chrome.tabGroups.query({windowId: chrome.windows.WINDOW_ID_CURRENT}, function(groups) {
@@ -53,11 +53,11 @@ function tabInGroup(tabIdToCheck)
       chrome.tabs.query({groupId: group.id, tabIds: [tabIdToCheck]}, function(groupTabs) {
           if (groupTabs.length > 0) 
           {
-            return true;
+            callback(true);
           }
           else
           {
-            return false;
+            callback(false);
           }
       });
     }
