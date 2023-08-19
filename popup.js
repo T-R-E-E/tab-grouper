@@ -33,7 +33,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
       // Group the selected tabs into a new tab group.
       const group = await chrome.tabs.group({ tabIds });
 
-      // Update the title of the created tab group to whatever the name input is
+      // Update the title of the created tab group to whatever the name input is + color
       await chrome.tabGroups.update(group, { title: groupName, color: groupColor});
     });
   });
