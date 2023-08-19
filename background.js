@@ -8,7 +8,8 @@ chrome.action.onClicked.addListener(function (tab) {
 
 // Define a function to retrieve the active tab's URL
 function getActiveTabUrl() {
-  const url = window.location.href;
-  // Send the URL back to the extension
-  chrome.runtime.sendMessage({ url: url });
+  chrome.tabs.query({'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT},
+  function(tabs) {
+    chrome.runtime.sendMessage({ url: tabs[0].url});
+  });
 }
