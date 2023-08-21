@@ -1,5 +1,6 @@
 // Initialize an empty array to store tabs to the right of the currently active tab.
 let tabsToRight = [];
+let notInGroup = [];
 
 // Query for the currently active tab in the current window.
 chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -10,7 +11,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
   chrome.tabs.query({ currentWindow: true }, function(allTabs) {
 
     // Filter the tabs to include those to the right & those NOT currently in a group
-    tabsToRight = allTabs.filter(tab => (tab.index >= activeTabIndex && !tabInGroup(tab.id, handleTabInGroupResult)));
+    tabsToRight = allTabs.filter(tab => tab.index >= activeTabIndex);
+
+    notInGroup = tabsToRight.filter(tab => !tabInGroup(tab.id, handleTabInGroupResult));
+    
 
     // Fetch the button element.
     const button = document.querySelector("button");
@@ -29,7 +33,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
       }
 
       // Create an array of tab ids from tabsToRight
-      const tabIds = tabsToRight.map(({ id }) => id);
+      const tabIds = notInGroup.map(({ id }) => id);
 
       // Group the selected tabs into a new tab group.
       const group = await chrome.tabs.group({ tabIds });
