@@ -10,7 +10,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
   chrome.tabs.query({ currentWindow: true }, function(allTabs) {
 
     // Filter the tabs to include those to the right & those NOT currently in a group
-    tabsToRight = allTabs.filter(tab => (tab.index >= activeTabIndex && !tabInGroup(tab.id, callback)));
+    tabsToRight = allTabs.filter(tab => (tab.index >= activeTabIndex && !tabInGroup(tab.id, handleTabInGroupResult)));
 
     // Fetch the button element.
     const button = document.querySelector("button");
@@ -41,7 +41,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 });
 
 // Checks if a tab is already in a group
-function tabInGroup(tabIdToCheck) {
+function tabInGroup(tabIdToCheck, callback) {
 
   // Query the groups in the window
   chrome.tabGroups.query({ windowId: chrome.windows.WINDOW_ID_CURRENT }, function(groups) {
@@ -63,4 +63,14 @@ function tabInGroup(tabIdToCheck) {
       });
     }
   });
+}
+
+
+// Define a callback function to handle the result
+function handleTabInGroupResult(isInGroup) {
+  if (isInGroup) {
+    return true;
+  } else {
+    return false;
+  }
 }
