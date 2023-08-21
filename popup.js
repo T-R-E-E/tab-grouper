@@ -53,7 +53,7 @@ function tabInGroup(tabIdToCheck, callback) {
     for (const group of groups) {
 
       // Check if tab is in the group or not
-      chrome.tabs.query({ groupId: group.id, tabIds: [tabIdToCheck] }, function(groupTabs) {
+      chrome.tabs.query({ groupId: group.id, id: tabIdToCheck}, function(groupTabs) {
 
         // Tab is in a group
         if (groupTabs.length > 0) {
