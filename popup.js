@@ -12,8 +12,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 
     // Filter the tabs to include those to the right & those NOT currently in a group
     tabsToRight = allTabs.filter(tab => tab.index >= activeTabIndex);
+    console.log(tabsToRight)
 
     notInGroup = tabsToRight.filter(tab => !tabInGroup(tab.id, handleTabInGroupResult));
+    console.log(notInGroup);
     
 
     // Fetch the button element.
@@ -67,6 +69,8 @@ function tabInGroup(tabIdToCheck, callback) {
       });
     }
 
+    console.log(counter);
+    
     // If a tab is in a group
     if (counter > 0)
     {
