@@ -46,17 +46,21 @@ function tabInGroup(tabIdToCheck, callback) {
   // Query the groups in the window
   chrome.tabGroups.query({ windowId: chrome.windows.WINDOW_ID_CURRENT }, function(groups) {
     
+    // Initialize flag to track if tab is found in grp
+    let foundInGroup = false;
+    
     // For each group
     for (const group of groups) {
 
       // Check if tab is in the group or not
       chrome.tabs.query({ groupId: group.id, tabIds: [tabIdToCheck] }, function(groupTabs) {
 
+        // Tab is in a group
         if (groupTabs.length > 0) {
-          // Tab is in a group
+          foundInGroup = true;
           callback(true);
         } 
-        else {
+        else if (!foundInGroup) {
           // Tab is not in a group
           callback(false);
         }
@@ -68,9 +72,5 @@ function tabInGroup(tabIdToCheck, callback) {
 
 // Define a callback function to handle the result
 function handleTabInGroupResult(isInGroup) {
-  if (isInGroup) {
-    return true;
-  } else {
-    return false;
-  }
+  return isInGroup;
 }
