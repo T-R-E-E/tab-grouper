@@ -12,9 +12,20 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 
     // Filter the tabs to include those to the right & those NOT currently in a group
     tabsToRight = allTabs.filter(tab => tab.index >= activeTabIndex);
-    console.log(tabsToRight)
+    console.log(tabsToRight);
 
-    notInGroup = tabsToRight.filter(tab => !tabInGroup(tab.id, handleTabInGroupResult));
+    let ingroup = false;
+
+    for (const tab of tabsToRight)
+    {
+
+      (tabInGroup(tab.id, handleTabInGroupResult)).then(result => {ingroup = result});
+
+      if (ingroup == true)
+      {
+         notInGroup.push(tab);
+      }
+    }
     console.log(notInGroup);
     
 
@@ -47,44 +58,37 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 });
 
 // Checks if a tab is already in a group
-function tabInGroup(tabIdToCheck, callback) {
+async function tabInGroup (tabIdToCheck)
+{
+  // set up flags
+  let inGroup = false;
 
-  // Query the groups in the window
-  chrome.tabGroups.query({ windowId: chrome.windows.WINDOW_ID_CURRENT }, function(groups) {
-  
-    // keep track of how many instances of the tab there is in a group.
-    let counter = 0;
-    
-    // For each group
-    for (const group of groups) {
+  // Query for all groups in the current window
+  const groups = await chrome.tabGroups.query({windowId: chrome.windows.WINDOW_ID_CURRENT});
+  for (const group of groups)
+  {
 
-      // Check if tab is in the group or not
-      chrome.tabs.query({ groupId: group.id}, function(groupTabs) {
-
-        for (const tab of groupTabs) {
-          if (tabIdToCheck == tab.id) {
-            counter++;
-          }
-        }
-      });
-    }
-
-    console.log(counter);
-    
-    // If a tab is in a group
-    if (counter > 0)
+    // Query for all tabs that are within those groups
+    const tabs = await chrome.tabs.query({groupId: group.id});
+    for (const tab of tabs)
     {
-      callback(true);
+      // Check each tab id against the signature provided
+      if (tabIdToCheck == tab.id)
+      {
+        console.log(tabIdToCheck);
+        console.log(tab.id);
+        inGroup = true;
+      }
     }
-    else 
-    {
-      callback(false);
-    }
-  });
+  }
+
+  console.log(inGroup);
+  return inGroup;
 }
 
 
 // Define a callback function to handle the result
 function handleTabInGroupResult(isInGroup) {
+  console.log(isInGroup);
   return isInGroup;
 }
