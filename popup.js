@@ -12,22 +12,20 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 
     // Filter the tabs to include those to the right & those NOT currently in a group
     tabsToRight = allTabs.filter(tab => tab.index >= activeTabIndex);
-
-    // Initialize flag
-    let isInGroup = false;
     
     // Iterate through tabs to right to see if they're in a group
     for (const tab of tabsToRight)
     {
-      // Store the result in the flag
-      await tabInGroup(tab.id).then(result => {isInGroup = result});
-
-      console.log(isInGroup);
-
-      // Check if the tab is not in a group
-      if (isInGroup == false)
-      {
-        notInGroup.push(tab);
+      // Error handling
+      try {
+        const isInGroup = await tabInGroup(tab.id);
+        console.log(isInGroup);
+    
+        if (!isInGroup) {
+          notInGroup.push(tab);
+        }
+      } catch (error) {
+        console.error('Error checking tab group status:', error);
       }
     }
 
