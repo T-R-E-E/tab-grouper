@@ -34,26 +34,30 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     const button = document.querySelector("button");
 
     // Add a click event listener to the button.
-    button.addEventListener("click", async () => {
+    button.addEventListener('keydown', async function (event) {
     
       // Retrieve group name from extension
-      const groupName = document.getElementById("name").value;
-      const groupColor = document.getElementById("color").value.toLowerCase();
-
-      // Validate group name
-      if (!groupName || groupName.trim() == '' || !groupColor || groupColor.trim() == '') {
-        alert("Please provide valid group name &/or group color");
-        return;
+      if (event.key == 'Enter')
+      {
+        event.preventDefault();
+        const groupName = document.getElementById("name").value;
+        const groupColor = document.getElementById("color").value.toLowerCase();
+  
+        // Validate group name
+        if (!groupName || groupName.trim() == '' || !groupColor || groupColor.trim() == '') {
+          alert("Please provide valid group name &/or group color");
+          return;
+        }
+  
+        // Create an array of tab ids from tabsToRight
+        const tabIds = tabsToRight.map(({ id }) => id);
+  
+        // Group the selected tabs into a new tab group.
+        const group = await chrome.tabs.group({ tabIds });
+  
+        // Update the title of the created tab group to whatever the name input is + color
+        await chrome.tabGroups.update(group, { title: groupName, color: groupColor});
       }
-
-      // Create an array of tab ids from tabsToRight
-      const tabIds = tabsToRight.map(({ id }) => id);
-
-      // Group the selected tabs into a new tab group.
-      const group = await chrome.tabs.group({ tabIds });
-
-      // Update the title of the created tab group to whatever the name input is + color
-      await chrome.tabGroups.update(group, { title: groupName, color: groupColor});
     });
 
     // Changes the input field from the keyboard --> allows user to input without having to use mouse
