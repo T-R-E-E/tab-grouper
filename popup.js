@@ -1,4 +1,4 @@
-// Initialize an empty array to store tabs to the right of the currently active tab.
+// Initialize empty arrays to store tabs to the right of the currently active tab & ones that are not in group
 let tabsToRight = [];
 let notInGroup = [];
 
