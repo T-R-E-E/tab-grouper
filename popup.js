@@ -14,19 +14,36 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     tabsToRight = allTabs.filter(tab => tab.index >= activeTabIndex);
     console.log(tabsToRight);
 
-    let ingroup = false;
+
+    let isInGroup = false;
+    
+    for (const tab of tabsToRight)
+    {
+      tabInGroup(tab.id).then(result => {isInGroup = result});
+      console.log(tabInGroup(tab.id).then(result => {isInGroup = result}));
+      console.log(isInGroup);
+
+      if (isInGroup == false)
+      {
+        notInGroup.push(tab);
+        
+      }
+    }
+    console.log(notInGroup);
+
+    /* let ingroup = false;
 
     for (const tab of tabsToRight)
     {
 
       (tabInGroup(tab.id, handleTabInGroupResult)).then(result => {ingroup = result});
 
-      if (ingroup == true)
+      if (await tabInGroup(tab.id, handleTabInGroupResult) == false)
       {
          notInGroup.push(tab);
       }
     }
-    console.log(notInGroup);
+    console.log(notInGroup); */
     
 
     // Fetch the button element.
