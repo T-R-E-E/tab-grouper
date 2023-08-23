@@ -21,7 +21,6 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs)
       // Error handling
       try 
       {
-        
         const isInGroup = await tabInGroup(tab.id);
     
         // Checks if the tab is in a group or not
@@ -58,7 +57,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs)
       }
 
       // Create an array of tab ids from tabsToRight
-      const tabIds = tabsToRight.map(({ id }) => id);
+      const tabIds = notInGroup.map(({ id }) => id);
 
       // Group the selected tabs into a new tab group.
       const group = await chrome.tabs.group({ tabIds });
