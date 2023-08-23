@@ -55,6 +55,27 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
       // Update the title of the created tab group to whatever the name input is + color
       await chrome.tabGroups.update(group, { title: groupName, color: groupColor});
     });
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key == 'Tab') {
+        event.preventDefault();
+        const name = document.getElementById("name");
+        const color = document.getElementById("color");
+
+        if (name == document.activeElement) {
+          color.focus();
+        }
+        else {
+          name.focus();
+        }
+      }
+      else if (event.key == 'Enter') {
+        event.preventDefault();
+        const submit = document.querySelector("button");
+        submit.focus();
+      }
+    });
+
   });
 });
 
