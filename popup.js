@@ -56,6 +56,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
       await chrome.tabGroups.update(group, { title: groupName, color: groupColor});
     });
 
+    // Changes the input field from the keyboard --> allows user to input without having to use mouse
     document.addEventListener('keydown', function(event) {
       if (event.key == 'Tab') {
         event.preventDefault();
@@ -68,11 +69,6 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         else {
           name.focus();
         }
-      }
-      else if (event.key == 'Enter') {
-        event.preventDefault();
-        const submit = document.querySelector("button");
-        submit.focus();
       }
     });
 
