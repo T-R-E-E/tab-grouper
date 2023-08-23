@@ -3,12 +3,14 @@ let tabsToRight = [];
 let notInGroup = [];
 
 // Query for the currently active tab in the current window.
-chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) 
+{
   // Get the index of the currently active tab.
   const activeTabIndex = tabs[0].index;
 
   // Query for all tabs in the current window.
-  chrome.tabs.query({ currentWindow: true }, async function(allTabs) {
+  chrome.tabs.query({ currentWindow: true }, async function(allTabs) 
+  {
 
     // Filter the tabs to include those to the right & those NOT currently in a group
     tabsToRight = allTabs.filter(tab => tab.index >= activeTabIndex);
@@ -17,15 +19,19 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     for (const tab of tabsToRight)
     {
       // Error handling
-      try {
+      try 
+      {
         
         const isInGroup = await tabInGroup(tab.id);
     
         // Checks if the tab is in a group or not
-        if (!isInGroup) {
+        if (!isInGroup) 
+        {
           notInGroup.push(tab);
         }
-      } catch (error) {
+      } 
+      catch (error) 
+      {
         console.error('Error checking tab group status:', error);
       }
     }
@@ -34,7 +40,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     const button = document.querySelector("button");
 
     // Add a click event listener to the button.
-    button.addEventListener('keydown', async function (event) {
+    button.addEventListener('keydown', async function (event) 
+    {
     
       // Retrieve group name from extension
       if (event.key == 'Enter')
@@ -44,7 +51,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         const groupColor = document.getElementById("color").value.toLowerCase();
   
         // Validate group name
-        if (!groupName || groupName.trim() == '' || !groupColor || groupColor.trim() == '') {
+        if (!groupName || groupName.trim() == '' || !groupColor || groupColor.trim() == '') 
+        {
           alert("Please provide valid group name &/or group color");
           return;
         }
@@ -61,21 +69,25 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     });
 
     // Changes the input field from the keyboard --> allows user to input without having to use mouse
-    document.addEventListener('keydown', function(event) {
-      if (event.key == 'Tab') {
+    document.addEventListener('keydown', function(event) 
+    {
+      // Checks if switching key was pressed
+      if (event.key == 'Tab') 
+      {
         event.preventDefault();
         const name = document.getElementById("name");
         const color = document.getElementById("color");
 
-        if (name == document.activeElement) {
+        if (name == document.activeElement) 
+        {
           color.focus();
         }
-        else {
+        else 
+        {
           name.focus();
         }
       }
     });
-
   });
 });
 
