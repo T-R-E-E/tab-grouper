@@ -8,7 +8,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
   const activeTabIndex = tabs[0].index;
 
   // Query for all tabs in the current window.
-  chrome.tabs.query({ currentWindow: true }, function(allTabs) {
+  chrome.tabs.query({ currentWindow: true }, async function(allTabs) {
 
     // Filter the tabs to include those to the right & those NOT currently in a group
     tabsToRight = allTabs.filter(tab => tab.index >= activeTabIndex);
@@ -20,7 +20,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     for (const tab of tabsToRight)
     {
       // Store the result in the flag
-      tabInGroup(tab.id).then(result => {isInGroup = result});
+      await tabInGroup(tab.id).then(result => {isInGroup = result});
 
       console.log(isInGroup);
 
@@ -30,7 +30,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         notInGroup.push(tab);
       }
     }
-    
+
     console.log(notInGroup);
 
     // Fetch the button element.
@@ -79,19 +79,10 @@ async function tabInGroup (tabIdToCheck)
       // Check each tab id against the signature provided
       if (tabIdToCheck == tab.id)
       {
-        (tabIdToCheck);
-        (tab.id);
         inGroup = true;
       }
     }
   }
 
   return inGroup;
-}
-
-
-// Define a callback function to handle the result
-function handleTabInGroupResult(isInGroup) {
-  (isInGroup);
-  return isInGroup;
 }
