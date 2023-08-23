@@ -37,35 +37,34 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs)
     }
 
     // Fetch the button element.
-    const button = document.querySelector("button");
+    const form = document.getElementById("groupsubmit");
 
     // Add a click event listener to the button.
-    button.addEventListener('keydown', async function (event) 
+    form.addEventListener('submit', async (event) => 
     {
-    
+
+      // Prevent default refresh of the page
+      event.preventDefault();
+
       // Retrieve group name from extension
-      if (event.key == 'Enter')
+      const groupName = document.getElementById("name").value;
+      const groupColor = document.getElementById("color").value.toLowerCase();
+
+      // Validate group name
+      if (!groupName || groupName.trim() == '' || !groupColor || groupColor.trim() == '') 
       {
-        event.preventDefault();
-        const groupName = document.getElementById("name").value;
-        const groupColor = document.getElementById("color").value.toLowerCase();
-  
-        // Validate group name
-        if (!groupName || groupName.trim() == '' || !groupColor || groupColor.trim() == '') 
-        {
-          alert("Please provide valid group name &/or group color");
-          return;
-        }
-  
-        // Create an array of tab ids from tabsToRight
-        const tabIds = tabsToRight.map(({ id }) => id);
-  
-        // Group the selected tabs into a new tab group.
-        const group = await chrome.tabs.group({ tabIds });
-  
-        // Update the title of the created tab group to whatever the name input is + color
-        await chrome.tabGroups.update(group, { title: groupName, color: groupColor});
+        alert("Please provide valid group name &/or group color");
+        return;
       }
+
+      // Create an array of tab ids from tabsToRight
+      const tabIds = tabsToRight.map(({ id }) => id);
+
+      // Group the selected tabs into a new tab group.
+      const group = await chrome.tabs.group({ tabIds });
+
+      // Update the title of the created tab group to whatever the name input is + color
+      await chrome.tabGroups.update(group, { title: groupName, color: groupColor});
     });
 
     // Changes the input field from the keyboard --> allows user to input without having to use mouse
