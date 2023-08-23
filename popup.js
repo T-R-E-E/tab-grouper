@@ -1,5 +1,6 @@
 // Initialize an empty array to store tabs to the right of the currently active tab.
 let tabsToRight = [];
+let notInGroup = [];
 
 // Query for the currently active tab in the current window.
 chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -7,11 +8,28 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
   const activeTabIndex = tabs[0].index;
 
   // Query for all tabs in the current window.
-  chrome.tabs.query({ currentWindow: true }, function(allTabs) {
+  chrome.tabs.query({ currentWindow: true }, async function(allTabs) {
 
     // Filter the tabs to include those to the right & those NOT currently in a group
-    tabsToRight = allTabs.filter(tab => (tab.index >= activeTabIndex && !tabInGroup(tab.id, handleTabInGroupResult)));
-  
+    tabsToRight = allTabs.filter(tab => tab.index >= activeTabIndex);
+    
+    // Iterate through tabs to right to see if they're in a group
+    for (const tab of tabsToRight)
+    {
+      // Error handling
+      try {
+        
+        const isInGroup = await tabInGroup(tab.id);
+    
+        // Checks if the tab is in a group or not
+        if (!isInGroup) {
+          notInGroup.push(tab);
+        }
+      } catch (error) {
+        console.error('Error checking tab group status:', error);
+      }
+    }
+
     // Fetch the button element.
     const button = document.querySelector("button");
 
@@ -41,42 +59,27 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
 });
 
 // Checks if a tab is already in a group
-function tabInGroup(tabIdToCheck, callback) {
+async function tabInGroup (tabIdToCheck)
+{
+  // set up flags
+  let inGroup = false;
 
-  // Query the groups in the window
-  chrome.tabGroups.query({ windowId: chrome.windows.WINDOW_ID_CURRENT }, function(groups) {
-  
-    // keep track of how many instances of the tab there is in a group.
-    let counter = 0;
-    
-    // For each group
-    for (const group of groups) {
+  // Query for all groups in the current window
+  const groups = await chrome.tabGroups.query({windowId: chrome.windows.WINDOW_ID_CURRENT});
+  for (const group of groups)
+  {
 
-      // Check if tab is in the group or not
-      chrome.tabs.query({ groupId: group.id}, function(groupTabs) {
-
-        for (const tab of groupTabs) {
-          if (tabIdToCheck == tab.id) {
-            counter++;
-          }
-        }
-      });
-    }
-
-    // If a tab is in a group
-    if (counter > 0)
+    // Query for all tabs that are within those groups
+    const tabs = await chrome.tabs.query({groupId: group.id});
+    for (const tab of tabs)
     {
-      callback(true);
+      // Check each tab id against the signature provided
+      if (tabIdToCheck == tab.id)
+      {
+        inGroup = true;
+      }
     }
-    else 
-    {
-      callback(false);
-    }
-  });
-}
+  }
 
-
-// Define a callback function to handle the result
-function handleTabInGroupResult(isInGroup) {
-  return isInGroup;
+  return inGroup;
 }
