@@ -20,9 +20,11 @@
 
   "commands" : {
     "_execute_action" : {
-      "suggested_key" : "Ctrl+G"
-      },
-
-      "description" : "Runs the extension on the page."
-    }
+        "suggested_key" : {
+          "default" : "Ctrl+G",
+          "mac" : "Command+G"
+        }
+      }
+    },
+    "description" : "Runs the extension on the page."
 }
