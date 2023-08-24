@@ -18,8 +18,10 @@
       "tabs"
   ],
 
-  "_execute_action" : {
-    "suggested-key" : "Ctrl+G"
+  "commands" : {
+    "_execute_action" : {
+      "suggested_key" : "Ctrl+G"
+    }
   },
 
   "description" : "Runs the extension on the page."
