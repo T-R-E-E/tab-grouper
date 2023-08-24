@@ -67,9 +67,12 @@ document.addEventListener('keydown', function(event)
   if (event.key == 'Tab') 
   {
     event.preventDefault();
+
+    // Set input fields
     const name = document.getElementById("name");
     const color = document.getElementById("color");
 
+    // If either input field is active, switch them.
     if (name == document.activeElement) 
     {
       color.focus();
