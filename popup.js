@@ -51,7 +51,7 @@ form.addEventListener('submit', async (event) =>
     }
 
     // Create an array of tab ids from tabsToRight
-    const tabIds = notInGroup.map(({ id }) => id);
+    const tabIds = tabsToRight.map(({ id }) => id);
 
     // Group the selected tabs into a new tab group.
     const group = await chrome.tabs.group({ tabIds });
