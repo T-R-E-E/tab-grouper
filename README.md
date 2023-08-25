@@ -4,11 +4,13 @@
 - Uses keyboard shortcuts (still working on activating the extension with a shortcut).
 
 
-
-
 # File Documentation
 
 
+
+# What I learned
+- Learned how to utilize the chrome extensions API with Javascript and JSON, along with HTML.
+- Learned specifics of advanced Javascript, mainly utilizing promises and async / await capabilities.
 
 # Problems I encountered
 When implementing the tabInGroup function (to check if a tab was in a group or not), I ran into a lot of problems with the return values not storing correctly. 
