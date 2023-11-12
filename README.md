@@ -5,7 +5,7 @@
 
 
 # File Documentation
-
+- Open up extension using shortcut with Ctrl+G (Will Check Once installed)
 
 
 # What I learned
