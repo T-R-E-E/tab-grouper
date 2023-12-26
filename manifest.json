@@ -26,5 +26,6 @@
         }
       }
     },
-    "description" : "Runs the extension on the page."
+
+    "description" : "Groups tabs to the right of the current tab with a tab group that has a user-selected name and color."
 }
