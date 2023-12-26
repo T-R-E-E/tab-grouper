@@ -1,18 +1,15 @@
 document.addEventListener("DOMContentLoaded", async () => 
 {
-    // Query the active tab in the browser
+    // Tab filtering
     let tabs = await chrome.tabs.query({active: true, currentWindow: true});
 
-    // Get the index of the current tab
     const activeTabIndex = tabs[0].index;
 
-    // Get all the tabs in the current window
     let allTabs = await chrome.tabs.query({currentWindow: true});
 
-    // Filter the tabs that are to the right of the active's index
     let tabsToRight = allTabs.filter(tab => tab.index >= activeTabIndex);
 
-    // Define temporary array to put non-grouped tabs into
+    // Making sublist for tabs that should be grouped.
     let temp = [];
 
     for (const tab of tabsToRight)
@@ -65,50 +62,49 @@ document.addEventListener("DOMContentLoaded", async () =>
     // Changes the input field from the keyboard --> allows user to input without having to use mouse
     document.addEventListener('keydown', function(event) 
     {
-    // Checks if switching key was pressed
-    if (event.key == 'Tab') 
-    {
-        event.preventDefault();
-
-        // Set input fields
-        const name = document.getElementById("name");
-        const color = document.getElementById("color");
-
-        // If either input field is active, switch them.
-        if (name == document.activeElement) 
+        // Checks if switching key was pressed
+        if (event.key == 'Tab') 
         {
-        color.focus();
+            event.preventDefault();
+
+            // Set input fields
+            const name = document.getElementById("name");
+            const color = document.getElementById("color");
+
+            // If either input field is active, switch them.
+            if (name == document.activeElement) 
+            {
+                color.focus();
+            }
+            else 
+            {
+                name.focus();
+            }
         }
-        else 
-        {
-        name.focus();
-        }
-    }
     });
 
     // Checks if a tab is already in a group
     async function tabInGroup (tabIdToCheck)
     {
-    // set up flags
-    let inGroup = false;
+        // set up flags
+        let inGroup = false;
 
-    // Query for all groups in the current window
-    const groups = await chrome.tabGroups.query({windowId: chrome.windows.WINDOW_ID_CURRENT});
-    for (const group of groups)
-    {
-
-        // Query for all tabs that are within those groups
-        const tabs = await chrome.tabs.query({groupId: group.id});
-        for (const tab of tabs)
+        // Query for all groups in the current window
+        const groups = await chrome.tabGroups.query({windowId: chrome.windows.WINDOW_ID_CURRENT});
+        for (const group of groups)
         {
-        // Check each tab id against the signature provided
-        if (tabIdToCheck == tab.id)
-        {
-            inGroup = true;
+            // Query for all tabs that are within those groups
+            const tabs = await chrome.tabs.query({groupId: group.id});
+            for (const tab of tabs)
+            {
+                // Check each tab id against the signature provided
+                if (tabIdToCheck == tab.id)
+                {
+                    inGroup = true;
+                }
+            }
         }
-        }
-    }
 
-    return inGroup;
+        return inGroup;
     }
 });
